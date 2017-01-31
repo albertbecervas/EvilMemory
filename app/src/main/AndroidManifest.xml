@@ -2,19 +2,65 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.evilmem.albert.evilmemory">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity
+            android:name=".Activities.Login"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.MainActivity"
+            android:label="Calculator" />
+        <activity
+            android:name=".Activities.Signin"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activities.drawer" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".Activities.Profile"
+            android:label="Profile" />
+        <activity
+            android:name=".Activities.EditProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.MusicPlayer"
+            android:label="Music Player"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activities.Ranking" />
+        <activity android:name=".Activities.Troll" />
+        <activity android:name=".Activities.ImgLogErr" />
+        <activity android:name=".Memory4" />
+        <activity android:name=".Memory6" />
+        <activity android:name=".Memory8" />
+        <activity android:name=".Activities.EvilMemory" />
+        <activity android:name=".Activities.Flipper" />
+
+        <service
+            android:name=".Service.MyService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Service.BoundService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
