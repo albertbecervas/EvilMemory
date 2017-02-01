@@ -1,11 +1,20 @@
 package com.evilmem.albert.evilmemory.Activities;
 
+import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.IBinder;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +23,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.evilmem.albert.evilmemory.R;
 import com.evilmem.albert.evilmemory.Activities.drawer;
+import com.evilmem.albert.evilmemory.Service.BoundService;
 
 import java.io.IOException;
 
@@ -24,22 +35,57 @@ import static android.media.AudioManager.STREAM_MUSIC;
 
 public class MusicPlayer extends drawer {
 
-    MediaPlayer mediaPlayer;
-    ImageView play;
+
+    ImageView play, stop, next, previous;
     Button selectSong;
     SeekBar volume;
     AudioManager audioManager;
     Boolean set;
-    @Override
+
+    TextView song;
+
+    MediaPlayer mediaPlayer;
+
+    BoundService bService;
+    boolean bound = false;
+    Intent intent;
+
+    private ServiceConnection connection = new ServiceConnection(){
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            BoundService.MyBinder binder = (BoundService.MyBinder) iBinder;
+            bService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0){
+            bound = false;
+        }
+    };
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
+        intent = new Intent(MusicPlayer.this, BoundService.class);
+
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
 
         play = (ImageView) findViewById(R.id.imageButton);
         play.setOnClickListener(listener);
 
+        stop = (ImageView) findViewById(R.id.imageButtonStop);
+        stop.setOnClickListener(listener);
+
+        next = (ImageView) findViewById(R.id.next);
+        next.setOnClickListener(listener);
+
         selectSong = (Button) findViewById(R.id.selectSong);
         selectSong.setOnClickListener(listener);
+
+        song = (TextView) findViewById(R.id.song);
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -50,22 +96,13 @@ public class MusicPlayer extends drawer {
             }
         });
 
-        try {
-            String s= getPackageName();
-            Log.d("package", "onCreate: "+ s);
-            mediaPlayer.setDataSource(getApplicationContext(), Uri.parse("android.resource://com.evilmem.albert.evilmemory/raw/starwars"));
-            mediaPlayer.prepare();
-            mediaPlayer.getTrackInfo();
-            set=true;
+        set=true;
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
 
         play.setImageResource(R.drawable.ic_playstation_logo);
 
         Volume();
+
 
     }
 
@@ -104,35 +141,58 @@ public class MusicPlayer extends drawer {
             switch (v.getId()){
                 case R.id.imageButton:
                         if(!set){
-                            try {
-                                play.setImageResource(R.drawable.ic_playstation_logo);
-                                play.invalidate();
-                                mediaPlayer.pause();
-                                set=true;
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
+                            bService.pauseSong();
+                            play.setImageResource(R.drawable.ic_playstation_logo);
+                            play.invalidate();
+                            set=true;
+
                         }else{
-                            try {
-                                play.setImageResource(R.drawable.ic_stop);
-                                mediaPlayer.start();
-                                set=false;
-                            }
-                            catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            bService.playSong();
+                            song.setText(bService.s);
+                            play.setImageResource(R.drawable.ic_stop);
+                            set=false;
+
                         }
                     break;
                 case R.id.selectSong:
-                    Uri myUri = Uri.parse("android.resource://res/raw");
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    try {
-                        mediaPlayer.setDataSource(getApplicationContext(), myUri);
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+
+                    if (ContextCompat.checkSelfPermission(MusicPlayer.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(MusicPlayer.this,
+                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            // Show an expanation to the user *asynchronously* -- don't block
+                            // this thread waiting for the user's response! After the user
+                            // sees the explanation, try again to request the permission.
+                        } else {
+                            // No explanation needed, we can request the permission.
+                            ActivityCompat.requestPermissions(MusicPlayer.this,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    0);
+                            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                            // app-defined int constant. The callback method gets the
+                            // result of the request.
+                        }
                     }
+
+
+
+                    if(ContextCompat.checkSelfPermission(MusicPlayer.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                    Intent intent1 = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent1, 1);}
+                    break;
+
+                case R.id.imageButtonStop:
+                    bService.stopSong();
+                    play.setImageResource(R.drawable.ic_playstation_logo);
+                    set=true;
+                    break;
+                case R.id.next:
+                    bService.playNext();
+                    song.setText(bService.s);
                     break;
 
 
@@ -145,27 +205,45 @@ public class MusicPlayer extends drawer {
 
         @Override
     protected void onDestroy() {
-        mediaPlayer.stop();
-        super.onDestroy();
+            super.onDestroy();
+            bService.on_destroy();
+
     }
 
-   /* @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
-                try {
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
-                    mediaPlayer.setDataSource(this,data.getData());
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
+                bService.playSongFromMemory(data);
+                play.setImageResource(R.drawable.ic_playstation_logo);
+
             }
         }
-    }*/
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 0: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 }

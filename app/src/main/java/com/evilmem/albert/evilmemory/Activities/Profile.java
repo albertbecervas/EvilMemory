@@ -1,20 +1,31 @@
 package com.evilmem.albert.evilmemory.Activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.evilmem.albert.evilmemory.Data.LoginHelper;
 import com.evilmem.albert.evilmemory.R;
 import com.evilmem.albert.evilmemory.Activities.drawer;
+
+import java.io.IOException;
 
 import static android.R.attr.finishOnCloseSystemDialogs;
 import static android.R.attr.id;
@@ -27,6 +38,8 @@ public class Profile extends drawer{
     SharedPreferences.Editor editor;
 
     TextView name, uname, address, maxscore4, maxscore6,maxscore8;
+
+    ImageView profile;
 
     LoginHelper loginHelper;
 
@@ -41,6 +54,8 @@ public class Profile extends drawer{
 
         Edit.setOnClickListener(listener);
         Logout.setOnClickListener(listener);
+
+        profile = (ImageView) findViewById(R.id.imageViewProfile);
 
         settings= getSharedPreferences("myApp", Context.MODE_PRIVATE);
         editor= settings.edit();
@@ -63,8 +78,24 @@ public class Profile extends drawer{
             score4 = c.getString(c.getColumnIndex("score4"));
             score6 = c.getString(c.getColumnIndex("score6"));
             score8 = c.getString(c.getColumnIndex("score8"));
+        }
 
 
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    0);
+        }
+        String s= sharedPreferences.getString("s", "jvkbn");
+        Log.d("URI", "onCreate: "+s);
+        Uri myUri= Uri.parse(s);
+        try {
+            profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
@@ -91,6 +122,7 @@ public class Profile extends drawer{
 
 
     }
+
 
     View.OnClickListener listener = new View.OnClickListener() {
         @Override

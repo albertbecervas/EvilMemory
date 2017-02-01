@@ -94,7 +94,16 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
             case R.id.fab:
                 Intent changeImage = new Intent(Intent.ACTION_GET_CONTENT, null);
                 changeImage.setType("image/*");
-                startActivityForResult(changeImage,1);
+
+                //Este Intent define para el ACTION_PICK, la URI de donde cogerá los datos
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+
+                //Usamos el Intent anterior para filtrar únicamente los que queremos que usen
+                Intent chooserIntent = Intent.createChooser(changeImage, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+                startActivityForResult(chooserIntent, 1);
                 break;
             case R.id.robot:
                 if(robot.isChecked()){
@@ -116,7 +125,10 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
             if(requestCode == 1){
                 data.getData();
                 selectedImage = data.getData();
-                Log.v("PICK","Selected image uri" + selectedImage);
+                String s = selectedImage.toString();
+                Log.d("uri", "onActivityResult: "+s);
+                editor.putString("s",s);
+                editor.apply();
                 try {
                     profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage));
                 } catch (IOException e) {

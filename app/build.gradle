@@ -31,4 +31,6 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
     testCompile 'junit:junit:4.12'
     compile project(':flipper')
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

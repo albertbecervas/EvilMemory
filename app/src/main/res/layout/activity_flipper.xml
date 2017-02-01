@@ -19,6 +19,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="143dp"
         android:id="@+id/imageView67"
-        android:onClick="flip"/>
+        android:onClick="action"/>
 
 </RelativeLayout>

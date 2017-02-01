@@ -26,7 +26,7 @@
             android:textSize="30dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/textView2" />
+            android:id="@+id/song" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/ic_fast_rewind_black_24dp"
-                    android:id="@+id/imageButton3"
+                    android:id="@+id/previous"
                     android:layout_weight="1" />
 
                 <ImageView
@@ -66,13 +66,20 @@
                     android:layout_gravity="center"
                     android:id="@+id/imageButton"
                     android:layout_weight="1" />
-
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_pause_circle_filled_black_24dp"
+                    android:id="@+id/imageButtonStop"
+                    android:layout_weight="1" />
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/ic_fast_forward_black_24dp"
-                    android:id="@+id/imageButton2"
+                    android:id="@+id/next"
                     android:layout_weight="1" />
+
+
 
             </LinearLayout>
 

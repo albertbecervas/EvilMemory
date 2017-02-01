@@ -3,7 +3,9 @@ package com.evilmem.albert.evilmemory.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -16,12 +18,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.evilmem.albert.evilmemory.Fragments.Ranking4;
 import com.evilmem.albert.evilmemory.Interface.OnFragmentInteractionListener;
 import com.evilmem.albert.evilmemory.Memory4;
 import com.evilmem.albert.evilmemory.R;
+
+import java.io.IOException;
 
 import static android.R.id.toggle;
 
@@ -32,6 +37,8 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
+    ImageView profile;
 
 
 
@@ -45,6 +52,8 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         sharedPreferences = getSharedPreferences("myApp", Context.MODE_PRIVATE);
         editor = getSharedPreferences("myApp", 0).edit();
+
+
 
 
         layout = findViewById(R.id.drawer_layout);
@@ -69,10 +78,22 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
         toggle.syncState();
 
 
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        profile = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageView);
+
+        /*String s= sharedPreferences.getString("s", "jvkbn");
+        Uri myUri= Uri.parse(s);
+        try {
+            profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+
+
+
 
 
         hello = (TextView) navigationView.getHeaderView(0).findViewById(R.id.hello);
@@ -89,7 +110,7 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         switch (id){
             case R.id.profile:
-                startActivity(new Intent(getApplicationContext(),Flipper.class));
+                startActivity(new Intent(getApplicationContext(),Profile.class));
                 break;
             case R.id.evilMemory:
                 startActivity(new Intent(getApplicationContext(), EvilMemory.class));

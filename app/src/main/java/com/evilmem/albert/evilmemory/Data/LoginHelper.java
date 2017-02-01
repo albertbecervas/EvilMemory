@@ -82,6 +82,17 @@ public class LoginHelper extends SQLiteOpenHelper{
                 values);
     }
 
+    public void modifyUser (ContentValues values, String tableName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.update(
+                tableName,
+                values,
+                null,
+                null
+                );
+    }
+
 
 
     public Cursor getscore4(String name){
