@@ -1,10 +1,13 @@
 package com.evilmem.albert.evilmemory;
 
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.example.material.joanbarroso.flipper.CoolImageFlipper;
 
@@ -16,6 +19,8 @@ import java.util.Random;
 
 import butterknife.BindDrawable;
 import butterknife.BindViews;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class Memory4 extends AppCompatActivity implements View.OnClickListener{
 
@@ -24,12 +29,12 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
 
     /*@BindViews({ R.drawable.ic_angel, R.drawable.ic_angel_and_demon_, R.drawable.ic_call_black_24dp, R.drawable.ic_evil,
             R.drawable.ic_camera_enhance_black_24dp,R.drawable.ic_dialpad_black_24dp,R.drawable.ic_exit_to_app_black_24dp,
-            R.drawable.ic_explore_black_24dp ,R.drawable.ic_angel, R.drawable.ic_angel_and_demon_, R.drawable.ic_call_black_24dp, R.drawable.ic_evil,
-            R.drawable.ic_camera_enhance_black_24dp,R.drawable.ic_dialpad_black_24dp,R.drawable.ic_exit_to_app_black_24dp,
-            R.drawable.ic_explore_black_24dp})
-    List<Drawable> drawables;*/
+            R.drawable.ic_explore_black_24dp })
+    List<View> drawables;*/
 
-    //String img[] = new String[drawables.size()];
+    Drawable[] drawables = new Drawable[16];
+
+    int[] vector;
 
 
     Boolean isVisible = true;
@@ -41,58 +46,34 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
         setContentView(R.layout.activity_memory4);
 
         flipper = new CoolImageFlipper(this);
 
         setCards();
+
     }
 
     public void setCards() {
-        //notVisible
-        i1 = (ImageView) findViewById(R.id.imageView0);
-        i2 = (ImageView) findViewById(R.id.imageView1);
-        i3 = (ImageView) findViewById(R.id.imageView2);
-        i4 = (ImageView) findViewById(R.id.imageView3);
-        i5 = (ImageView) findViewById(R.id.imageView8);
-        i6 = (ImageView) findViewById(R.id.imageView9);
-        i7 = (ImageView) findViewById(R.id.imageView10);
-        i8 = (ImageView) findViewById(R.id.imageView11);
-        i9 = (ImageView) findViewById(R.id.imageView16);
-        i10 = (ImageView) findViewById(R.id.imageView17);
-        i11 = (ImageView) findViewById(R.id.imageView18);
-        i12 = (ImageView) findViewById(R.id.imageView19);
-        i13 = (ImageView) findViewById(R.id.imageView24);
-        i14 = (ImageView) findViewById(R.id.imageView25);
-        i15 = (ImageView) findViewById(R.id.imageView26);
-        i16 = (ImageView) findViewById(R.id.imageView27);
 
-        i1.setOnClickListener(this);
-        i2.setOnClickListener(this);
-        i3.setOnClickListener(this);
-        i4.setOnClickListener(this);
-        i5.setOnClickListener(this);
-        i6.setOnClickListener(this);
-        i7.setOnClickListener(this);
-        i8.setOnClickListener(this);
-        i9.setOnClickListener(this);
-        i10.setOnClickListener(this);
-        i11.setOnClickListener(this);
-        i12.setOnClickListener(this);
-        i13.setOnClickListener(this);
-        i14.setOnClickListener(this);
-        i15.setOnClickListener(this);
-        i16.setOnClickListener(this);
-
-        //visible
-        //drawables = Arrays.asList();
-       // Collections.shuffle(drawables);
-
-
-      //  for (int i = 0; i++;)
-
-
-
+        drawables[0] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_angel);
+        drawables[1] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_evil);
+        drawables[2] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_angel_and_demon_);
+        drawables[3] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_call_black_24dp);
+        drawables[4] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_camera_enhance_black_24dp);
+        drawables[5] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_dialpad_black_24dp);
+        drawables[6] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_exit_to_app_black_24dp);
+        drawables[7] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_explore_black_24dp);
+        drawables[8] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_angel);
+        drawables[9] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_evil);
+        drawables[10] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_angel_and_demon_);
+        drawables[11] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_call_black_24dp);
+        drawables[12] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_camera_enhance_black_24dp);
+        drawables[13] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_dialpad_black_24dp);
+        drawables[14] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_exit_to_app_black_24dp);
+        drawables[15] = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_explore_black_24dp);
+        //Collections.shuffle(drawables);
     }
 
     public void flipper(View view){
@@ -127,8 +108,10 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
 
     }
 
-    @Override
-    public void onClick(View view) {
+
+    @OnClick({R.id.imageView0,R.id.imageView1,R.id.imageView2,R.id.imageView3,R.id.imageView8,R.id.imageView9,R.id.imageView10,R.id.imageView11
+    ,R.id.imageView16,R.id.imageView17,R.id.imageView18,R.id.imageView19,R.id.imageView24,R.id.imageView25,R.id.imageView26,R.id.imageView27})
+    public void onClick(View view){
         switch (view.getId()){
             case R.id.imageView0:
                 int i = 0;
@@ -196,7 +179,6 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
                 action(view);
                 break;
         }
-
     }
 
     public void setRandomGrid(){

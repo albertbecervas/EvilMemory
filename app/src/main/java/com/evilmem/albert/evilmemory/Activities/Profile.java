@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -88,15 +89,9 @@ public class Profile extends drawer{
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     0);
+
         }
-        String s= sharedPreferences.getString("s", "jvkbn");
-        Log.d("URI", "onCreate: "+s);
-        Uri myUri= Uri.parse(s);
-        try {
-            profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
 
         name=(TextView)findViewById(R.id.name);
@@ -157,4 +152,23 @@ public class Profile extends drawer{
         }
 
     };
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                String s= sharedPreferences.getString("s", "jvkbn");
+                Log.d("URI", "onCreate: "+s);
+                Uri myUri= Uri.parse(s);
+                try {
+                    profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // User refused to grant permission.
+            }
+        }
+    }
 }
