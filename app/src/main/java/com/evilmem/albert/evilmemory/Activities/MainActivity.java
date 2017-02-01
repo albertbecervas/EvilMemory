@@ -38,7 +38,6 @@ public class MainActivity extends drawer{
 
     String symbol;
 
-    Toolbar toolbar;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -50,10 +49,6 @@ public class MainActivity extends drawer{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.ic_dialpad_black_24dp);
 
         operands = (TextView) findViewById(R.id.operands);
         result = (TextView) findViewById(R.id.result);
