@@ -83,14 +83,28 @@ public class Profile extends drawer{
 
 
 
-
-
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     0);
 
-        }
+        }*/
+        /*
+        String s= sharedPreferences.getString("s", "jvkbn");
+        Log.d("URI", "onCreate: "+s);
+        Uri myUri= Uri.parse(s);
+        try {
+            Log.d("URI", "onCreate: "+s);
+            profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri));
+        } catch (IOException e) {
+            Log.d("error", "onCreate: "+s);
+            e.printStackTrace();
+        }*/
+
+
+
 
 
 
@@ -158,17 +172,10 @@ public class Profile extends drawer{
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 0) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                String s= sharedPreferences.getString("s", "jvkbn");
-                Log.d("URI", "onCreate: "+s);
-                Uri myUri= Uri.parse(s);
-                try {
-                    profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUri));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // User refused to grant permission.
+
             }
         }
     }
 }
+
+//TODO Permisos persistentes para volver a cargar imagenes despues de cerrar la app

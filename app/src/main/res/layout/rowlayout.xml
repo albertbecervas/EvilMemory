@@ -15,7 +15,7 @@
         android:text="PRRRR2"
         android:layout_weight="1" />
     <TextView
-        android:id="@+id/phone"
+        android:id="@+id/score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="PRRRRR"

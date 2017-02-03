@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.evilmem.albert.evilmemory.R;
 import com.evilmem.albert.evilmemory.Activities.drawer;
 
-import static com.evilmem.albert.evilmemory.R.id.button3;
 
 public class MainActivity extends drawer{
 

@@ -2,6 +2,7 @@ package com.evilmem.albert.evilmemory.Fragments;
 
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,8 @@ public class Ranking6 extends Fragment{
 
     MyCustomAdapter myAdapter;
 
+    LoginHelper loginHelper;
+
     public Ranking6() {
         // Required empty public constructor
     }
@@ -46,12 +49,22 @@ public class Ranking6 extends Fragment{
 
         View rootView = inflater.inflate(R.layout.fragment_ranking6, container, false);
 
+        loginHelper = new LoginHelper(getActivity().getApplicationContext());
 
-        rankingPlayers = new ArrayList<>();
-        rankingPlayers.add(new RankingPlayer(0,"Benito Camela","123456789"));
-        rankingPlayers.add(new RankingPlayer(0,"Alberto Carlos Huevos","123456789"));
-        rankingPlayers.add(new RankingPlayer(1,"Lola Mento","123456789"));
-        rankingPlayers.add(new RankingPlayer(0,"Aitor Tilla","123456789"));
+        rankingPlayers = new ArrayList<>(0);
+
+
+        Cursor cursor = loginHelper.getRanking6();
+        RankingPlayer pos;
+        if (cursor.moveToFirst()) {
+            do {
+                String u = cursor.getString(cursor.getColumnIndex("name"));
+                int p = cursor.getInt(cursor.getColumnIndex("score6"));
+                pos = new RankingPlayer(0, u, p);
+                rankingPlayers.add(pos);
+            } while (cursor.moveToNext());
+        }
+
 
 
         delete=(Button) rootView.findViewById(R.id.button);
@@ -61,6 +74,17 @@ public class Ranking6 extends Fragment{
           public void onClick(View v) {
               LoginHelper LoginHelper = new LoginHelper(getActivity().getApplicationContext());
               LoginHelper.DeleteRanking6();
+              Cursor cursor = loginHelper.getRanking6();
+              RankingPlayer pos;
+              if (cursor.moveToFirst()) {
+                  do {
+                      String u = cursor.getString(cursor.getColumnIndex("name"));
+                      int p = cursor.getInt(cursor.getColumnIndex("score6"));
+                      pos = new RankingPlayer(0, u, p);
+                      rankingPlayers.add(pos);
+                  } while (cursor.moveToNext());
+              }
+
               myAdapter.setData(rankingPlayers);
               myAdapter.notifyDataSetChanged();
 

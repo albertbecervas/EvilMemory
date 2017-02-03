@@ -17,13 +17,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.evilmem.albert.evilmemory.Data.LoginHelper;
+import com.evilmem.albert.evilmemory.Data.User;
 import com.evilmem.albert.evilmemory.R;
 
 import java.io.IOException;
 
+import io.realm.Realm;
+
 public class Signin extends AppCompatActivity implements View.OnClickListener{
 
-    EditText name,password,Completename,address;
+    EditText name,password, completename,address;
     LoginHelper loginHelper;
 
     ImageView profile;
@@ -50,7 +53,7 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
         fab= (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        Completename = (EditText) findViewById(R.id.completeuser);
+        completename = (EditText) findViewById(R.id.completeuser);
 
         robot = (CheckBox) findViewById(R.id.robot);
         robot.setOnClickListener(this);
@@ -69,7 +72,14 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
             ContentValues valuesToStore = new ContentValues();
             valuesToStore.put("name", String.valueOf(name.getText()));
             valuesToStore.put("password", String.valueOf(password.getText()));
-            valuesToStore.put("completename", String.valueOf(Completename.getText()));
+            valuesToStore.put("completename", String.valueOf(completename.getText()));
+
+
+            //realm
+            //createRealmUser();
+
+
+
             editor.putBoolean("UserLoggedIn", true);
             editor.putString("username",name.getText().toString());
             editor.apply();
@@ -87,6 +97,20 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+    private void createRealmUser() {
+        Realm realm = Realm.getDefaultInstance();
+
+        User user = new User();
+        String username = name.getText().toString();
+        user.setName(username);
+        user.setPass(password.getText().toString());
+        user.setCompletename(completename.getText().toString());
+
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(user);
+        realm.commitTransaction();
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -95,6 +119,7 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
                 Intent changeImage = new Intent(Intent.ACTION_GET_CONTENT, null);
                 changeImage.setType("image/*");
 
+
                 //Este Intent define para el ACTION_PICK, la URI de donde cogerá los datos
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/*");
@@ -102,6 +127,7 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
                 //Usamos el Intent anterior para filtrar únicamente los que queremos que usen
                 Intent chooserIntent = Intent.createChooser(changeImage, "Select Image");
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION| Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
                 startActivityForResult(chooserIntent, 1);
                 break;
@@ -123,8 +149,14 @@ public class Signin extends AppCompatActivity implements View.OnClickListener{
         //Aún así comprobamos los request code. Hay que tener total control de lo que hace nuestra app.
         if(resultCode == RESULT_OK){
             if(requestCode == 1){
-                data.getData();
+                //data.getData();
                 selectedImage = data.getData();
+                /*final int takeFlags = data.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // Check for the freshest data.
+                //Signin.grantUriPermission(getCallingActivity().getPackageName(), selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getApplicationContext().getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);*/
                 String s = selectedImage.toString();
                 Log.d("uri", "onActivityResult: "+s);
                 editor.putString("s",s);

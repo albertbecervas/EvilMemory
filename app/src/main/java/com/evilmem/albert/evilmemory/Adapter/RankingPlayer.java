@@ -6,12 +6,12 @@ package com.evilmem.albert.evilmemory.Adapter;
 public class RankingPlayer {
     private int icon;
     private String name;
-    private String phone;
+    private int score;
 
-    public RankingPlayer(int icon, String name, String phone){
+    public RankingPlayer(int icon, String name, int score){
         this.icon = icon;
         this.name = name;
-        this.phone = phone;
+        this.score = score;
 
     }
     RankingPlayer(){
@@ -34,11 +34,8 @@ public class RankingPlayer {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public int getScore() {
+        return score;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

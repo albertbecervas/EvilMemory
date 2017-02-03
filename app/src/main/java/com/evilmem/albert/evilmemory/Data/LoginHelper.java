@@ -82,7 +82,7 @@ public class LoginHelper extends SQLiteOpenHelper{
                 values);
     }
 
-    public void modifyUser (ContentValues values, String tableName) {
+   /* public void modifyUser (ContentValues values, String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.update(
@@ -91,57 +91,43 @@ public class LoginHelper extends SQLiteOpenHelper{
                 null,
                 null
                 );
+    }*/
+
+    public void modifyName(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " +LOGIN_TABLE +" SET completename='"+name+"'");
+    }
+    public void modifyPassword(String password){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " +LOGIN_TABLE +" SET password='"+password+"'");
+    }
+
+    public void modifyAddress(String address){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " +LOGIN_TABLE +" SET address='"+address+"'");
     }
 
 
-
-    public Cursor getscore4(String name){
-        SQLiteDatabase db= this.getReadableDatabase();
-        String [] columns = {"score4"};
-        String [] where = {name};
-        Cursor c= db.query(
+    public Cursor getRanking6() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {"name", "score6"};
+        Cursor c=db.query(
                 LOGIN_TABLE,
                 columns,
-                "name=?",
-                where,
+                "score6!=0",
                 null,
                 null,
-                null
+                null,
+                "score6 ASC"
         );
         return c;
     }
 
-    public Cursor getscore6(String name){
-        SQLiteDatabase db= this.getReadableDatabase();
-        String [] columns = {"score4"};
-        String [] where = {name};
-        Cursor c= db.query(
-                LOGIN_TABLE,
-                columns,
-                "name=?",
-                where,
-                null,
-                null,
-                null
-        );
-        return c;
+    public void setScore4(String username, int intents) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE "+LOGIN_TABLE+" SET score6="+intents+" WHERE name='"+username+"';");
     }
 
-    public Cursor getscore8(String name){
-        SQLiteDatabase db= this.getReadableDatabase();
-        String [] columns = {"score4"};
-        String [] where = {name};
-        Cursor c= db.query(
-                LOGIN_TABLE,
-                columns,
-                "name=?",
-                where,
-                null,
-                null,
-                null
-        );
-        return c;
-    }
 
     public void DeleteRanking4(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -150,7 +136,7 @@ public class LoginHelper extends SQLiteOpenHelper{
 
     public void DeleteRanking6(){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " +LOGIN_TABLE +" SET score6=" + 1);
+        db.execSQL("UPDATE " +LOGIN_TABLE +" SET score6=" + 0);
     }
 
     public void DeleteRanking8(){

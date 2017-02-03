@@ -1,10 +1,13 @@
 package com.evilmem.albert.evilmemory.Activities;
 
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 
 import com.evilmem.albert.evilmemory.Data.LoginHelper;
 import com.evilmem.albert.evilmemory.R;
+import com.evilmem.albert.evilmemory.Service.BoundService;
+import com.evilmem.albert.evilmemory.gps.GPSActivity;
 
 import java.io.IOException;
 
@@ -38,10 +43,33 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
     ImageView profile;
 
+
+    BoundService bService;
+    boolean bound = false;
+    Intent intent;
+
+    private ServiceConnection connection = new ServiceConnection(){
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            BoundService.MyBinder binder = (BoundService.MyBinder) iBinder;
+            bService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0){
+            bound = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        intent = new Intent(EditProfile.this, BoundService.class);
+
+        bindService(intent, connection, Context.BIND_ADJUST_WITH_ACTIVITY);
 
         name = (EditText) findViewById(R.id.completeuser);
         address = (EditText) findViewById(R.id.address);
@@ -62,6 +90,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         fabaddress.setOnClickListener(this);
 
         loginHelper = new LoginHelper(getApplicationContext());
+
     }
 
     @Override
@@ -85,29 +114,39 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                 //startActivityForResult(chooserIntent, 1);
                 break;
             case R.id.fabaddress:
-                address.setText("carrer Sol");
+                //bService.getGPS();
+                startActivity(new Intent (EditProfile.this, GPSActivity.class));
                 break;
         }
     }
 
 
     public void saveChanges(){
-        ContentValues valuesToStore = new ContentValues();
+        /*ContentValues valuesToStore = new ContentValues();
         valuesToStore.put("completename", String.valueOf(name.getText()));
         valuesToStore.put("address", String.valueOf(address.getText()));
-        valuesToStore.put("password", String.valueOf(password.getText()));
+        valuesToStore.put("password", String.valueOf(password.getText()));*/
 
-        editor.putBoolean("UserLoggedIn", true);
+        String cname= String.valueOf(name.getText());
+        String pass= String.valueOf(password.getText());
+        String add= String.valueOf(address.getText());
+
+       /* editor.putBoolean("UserLoggedIn", true);
         editor.putString("username",name.getText().toString());
-        editor.apply();
+        editor.apply();*/
 
-        loginHelper.modifyUser(valuesToStore, "Users");
+        if(cname!=""&& cname.length()>5){
+        loginHelper.modifyName(cname);}
+        if(pass!=""&& pass.length()>5){
+        loginHelper.modifyPassword(pass);}
+        if(add!=""&& add.length()>5){
+        loginHelper.modifyAddress(add);}
 
         Toast.makeText(getApplicationContext(), "User settings modified" + name.getText(), Toast.LENGTH_LONG).show();
         //name.setText("");
         //password.setText("");
 
-        Intent intent = new Intent(getApplicationContext(), EvilMemory.class);
+        Intent intent = new Intent(getApplicationContext(), Profile.class);
         startActivity(intent);
     }
 

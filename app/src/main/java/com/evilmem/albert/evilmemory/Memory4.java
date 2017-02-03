@@ -1,6 +1,10 @@
 package com.evilmem.albert.evilmemory;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.evilmem.albert.evilmemory.Activities.EvilMemory;
+import com.evilmem.albert.evilmemory.Data.LoginHelper;
 import com.example.material.joanbarroso.flipper.CoolImageFlipper;
 
 import java.lang.reflect.Array;
@@ -24,31 +32,51 @@ import butterknife.OnClick;
 
 public class Memory4 extends AppCompatActivity implements View.OnClickListener{
 
-    /*@BindViews({ R.drawable.ic_angel, R.drawable.ic_angel_and_demon_, R.drawable.ic_call_black_24dp, R.drawable.ic_evil,
-            R.drawable.ic_camera_enhance_black_24dp,R.drawable.ic_dialpad_black_24dp,R.drawable.ic_exit_to_app_black_24dp,
-            R.drawable.ic_explore_black_24dp })
-    List<View> drawables;*/
-
     ImageView i1,i2,i3,i4,i5,i6,i7,i8,i9,i10,i11,i12,i13,i14,i15,i16;
 
-    Drawable[] drawables = new Drawable[16];
+    Drawable backside;
 
+    Integer[] drawables = new Integer[16];
+
+    LoginHelper loginHelper;
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
+    int intents=0;
+
+    TextView attempts;
 
     boolean isFirst = true;
     boolean[] isVisible= new boolean[16];
 
     CoolImageFlipper flipper;
 
-    @BindDrawable(R.drawable.ic_fast_rewind_black_24dp) Drawable backside;
+    int card1;
+    int card2;
+    int pairs=0;
+
+    View view0,view1;
+
+
+
+    //@BindDrawable(R.drawable.ic_fast_forward_black_24dp) Drawable backside;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //ButterKnife.bind(this);
+
         setContentView(R.layout.activity_memory4);
+        //ButterKnife.bind(this);
 
         flipper = new CoolImageFlipper(this);
+
+        attempts = (TextView) findViewById(R.id.intents);
+
+        sharedPreferences= getSharedPreferences("myApp", Context.MODE_PRIVATE);
+        editor= sharedPreferences.edit();
+
 
         setCards();
 
@@ -92,62 +120,101 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
         i16.setOnClickListener(this);
 
 
-        drawables[0] = getResources().getDrawable( R.drawable.ic_angel);
-        drawables[1] = getResources().getDrawable( R.drawable.ic_evil);
-        drawables[2] = getResources().getDrawable( R.drawable.ic_angel_and_demon_);
-        drawables[3] = getResources().getDrawable( R.drawable.ic_call_black_24dp);
-        drawables[4] = getResources().getDrawable( R.drawable.ic_camera_enhance_black_24dp);
-        drawables[5] = getResources().getDrawable(R.drawable.ic_dialpad_black_24dp);
-        drawables[6] = getResources().getDrawable(R.drawable.ic_exit_to_app_black_24dp);
-        drawables[7] = getResources().getDrawable(R.drawable.ic_explore_black_24dp);
-        drawables[8] = getResources().getDrawable( R.drawable.ic_angel);
-        drawables[9] = getResources().getDrawable( R.drawable.ic_evil);
-        drawables[10] = getResources().getDrawable( R.drawable.ic_angel_and_demon_);
-        drawables[11] = getResources().getDrawable( R.drawable.ic_call_black_24dp);
-        drawables[12] = getResources().getDrawable( R.drawable.ic_camera_enhance_black_24dp);
-        drawables[13] = getResources().getDrawable( R.drawable.ic_dialpad_black_24dp);
-        drawables[14] = getResources().getDrawable( R.drawable.ic_exit_to_app_black_24dp);
-        drawables[15] = getResources().getDrawable( R.drawable.ic_explore_black_24dp);
+        drawables[0] =  R.drawable.ic_angel;
+        drawables[1] =  R.drawable.ic_evil;
+        drawables[2] =  R.drawable.ic_angel_and_demon_;
+        drawables[3] =  R.drawable.ic_call_black_24dp;
+        drawables[4] =  R.drawable.ic_camera_enhance_black_24dp;
+        drawables[5] = R.drawable.ic_dialpad_black_24dp;
+        drawables[6] = R.drawable.ic_exit_to_app_black_24dp;
+        drawables[7] = R.drawable.ic_explore_black_24dp;
+        drawables[8] =  R.drawable.ic_angel;
+        drawables[9] =  R.drawable.ic_evil;
+        drawables[10] =  R.drawable.ic_angel_and_demon_;
+        drawables[11] =  R.drawable.ic_call_black_24dp;
+        drawables[12] =  R.drawable.ic_camera_enhance_black_24dp;
+        drawables[13] =  R.drawable.ic_dialpad_black_24dp;
+        drawables[14] =  R.drawable.ic_exit_to_app_black_24dp;
+        drawables[15] =  R.drawable.ic_explore_black_24dp;
 
-        List<Drawable> cards = Arrays.asList(drawables);
+        backside = getResources().getDrawable(R.drawable.ic_fast_forward_black_24dp);
+
+        /*List<Integer> cards =  Arrays.asList(drawables);
         Collections.shuffle(cards);
-        cards.toArray(drawables);
+        cards.toArray(drawables);*/
     }
 
     public void flipper(View view,int i){
         if(!isVisible[i]){
-            flipper.flipImage(drawables[i], ((ImageView) view));
+            flipper.flipImage(getResources().getDrawable(drawables[i]), ((ImageView) view));
 
         }else{
             flipper.flipImage(backside, ((ImageView) view));
         }
         isVisible[i]= !isVisible[i];
+
     }
+
 
     public void action(View view,int i) {
         if (!isVisible[i]) {
             if (isFirst) {
-                flipper(view, i);
-                isVisible[i] = true;
+                view0=view;
+                card1= i;
+                flipper(view0, card1);
+               // isVisible[card1] = true;
                 isFirst = false;
-            } else {
-                flipper(view, i);
-                isFirst = true;
-                isVisible[i] = true;
+            }else {
+                view1=view;
+                card2= i;
+                flipper(view1, card2);
+                try{
+                    Thread.sleep(1000);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                //isVisible[card2]=true;
+                intents++;
+                attempts.setText(""+intents);
 
-                /*if(matches){
-                    dontFlip();
-                    progressBar+=1;
+                Log.d("c1", "action: "+drawables[card1]);
+                Log.d("c2", "action: "+drawables[card2]);
+
+                if(drawables[card1].intValue() == drawables[card2].intValue()){
+                    Log.d("YEAH", "action: OHYESSS");
+                    if((pairs+=1)==drawables.length/2){
+                        win(intents);
+                    }
                 }else{
-                    flipper de les dues
-                    intents++;
-                }*/
+                    flipper(view0,card1);
+                    flipper(view1,card2);
+                   // isVisible[card2]=false;
+                    //isVisible[card1]=false;
+                    Log.d("YEAH", "action: OHNOOO");
+
+
+                }
+                isFirst = true;
 
 
             }
+
         }
     }
 
+
+    public void win(int intents){
+        loginHelper = new LoginHelper(this);
+        String username= sharedPreferences.getString("username", "pepito");
+        /*int score = loginHelper.getScore4(username);
+        if(intents>score){
+
+        }*/
+        loginHelper.setScore4(username,intents);
+        Toast.makeText(getApplicationContext(),"you won",Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), EvilMemory.class));
+
+    }
 
 
 
@@ -155,9 +222,7 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.imageView0:
-                Log.d("click", "onClick: ");
                 action(view,0);
-
                 break;
 
             case R.id.imageView1:
@@ -223,7 +288,7 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
 
     }
 
-   /* @OnClick({R.id.imageView0,R.id.imageView1,R.id.imageView2,R.id.imageView3,R.id.imageView8,R.id.imageView9,R.id.imageView10,R.id.imageView11,R.id.imageView16,R.id.imageView17,R.id.imageView18,R.id.imageView19,R.id.imageView24,R.id.imageView25,R.id.imageView26,R.id.imageView27})
+    /*@OnClick({R.id.imageView0,R.id.imageView1,R.id.imageView2,R.id.imageView3,R.id.imageView8,R.id.imageView9,R.id.imageView10,R.id.imageView11,R.id.imageView16,R.id.imageView17,R.id.imageView18,R.id.imageView19,R.id.imageView24,R.id.imageView25,R.id.imageView26,R.id.imageView27})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.imageView0:
@@ -292,16 +357,23 @@ public class Memory4 extends AppCompatActivity implements View.OnClickListener{
         }
     }*/
 
-    public void setRandomGrid(){
-        Random rand = new Random();
-        int a,b,aux;
-        for(int i = 0;i<32;i++){
+    /*private class MyTask extends AsyncTask<Integer, Integer, String> {
 
-           // a = rand.nextInt(random.length+1);
-           // b= rand.nextInt(random.length+1);
-
-
+        @Override
+        protected String doInBackground(Integer... param) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //publishProgress(int); //actualizar progreso
+            return ;
         }
 
-    }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute();
+        }*/
+
+
 }

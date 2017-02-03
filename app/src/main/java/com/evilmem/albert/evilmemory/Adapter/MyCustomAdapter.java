@@ -44,7 +44,7 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.Adapte
                 break;
         }
         adapterViewholder.name.setText(rankingPlayers.get(position).getName());
-        adapterViewholder.phone.setText(rankingPlayers.get(position).getPhone());
+        adapterViewholder.score.setText(""+rankingPlayers.get(position).getScore());
 
     }
 
@@ -73,14 +73,14 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.Adapte
 
         public ImageView icon;
         public TextView name;
-        public TextView phone;
+        public TextView score;
         public View v;
         public AdapterViewHolder(View itemView) {
             super(itemView);
             this.v = itemView;
             this.icon = (ImageView) itemView.findViewById(R.id.icon);
             this.name = (TextView) itemView.findViewById(R.id.name);
-            this.phone = (TextView) itemView.findViewById(R.id.phone);
+            this.score = (TextView) itemView.findViewById(R.id.score);
         }
     }
 }

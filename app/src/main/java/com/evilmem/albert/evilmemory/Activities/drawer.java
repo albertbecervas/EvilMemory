@@ -28,6 +28,8 @@ import com.evilmem.albert.evilmemory.R;
 
 import java.io.IOException;
 
+import io.realm.Realm;
+
 import static android.R.id.toggle;
 
 
@@ -53,7 +55,8 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
         sharedPreferences = getSharedPreferences("myApp", Context.MODE_PRIVATE);
         editor = getSharedPreferences("myApp", 0).edit();
 
-
+        //realm
+        Realm.init(this);
 
 
         layout = findViewById(R.id.drawer_layout);
@@ -110,7 +113,7 @@ public class drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         switch (id){
             case R.id.profile:
-                startActivity(new Intent(getApplicationContext(),Profile.class));
+                startActivity(new Intent(getApplicationContext(),Weather.class));
                 break;
             case R.id.evilMemory:
                 startActivity(new Intent(getApplicationContext(), EvilMemory.class));

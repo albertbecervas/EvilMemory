@@ -178,15 +178,12 @@
 
     </RelativeLayout>
 
-    <Button
-        android:text="iniciar sesión con twitter"
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="#fff"
-        android:textColor="#ff0099cc"
-        android:layout_marginTop="5dp"
-        android:layout_weight="9"
-        android:id="@+id/button3" />
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
 
 
 

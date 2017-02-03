@@ -4,10 +4,16 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_" />
-
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="de.test.READ_DATABASE" />
     <uses-permission android:name="de.test.WRITE_DATABASE" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.light"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -57,15 +63,18 @@
         <activity android:name=".Memory8" />
         <activity android:name=".Activities.EvilMemory" />
         <activity android:name=".Activities.Flipper" />
+        <activity android:name=".gps.GPSActivity"></activity>
 
-        <service
-            android:name=".Service.MyService"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".Service.BoundService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b024038b5dc0c3ccf0dc96a3fc6abbaef2f7dca2" />
+
+        <activity android:name=".Activities.Weather"></activity>
     </application>
 
 </manifest>
