@@ -1,11 +1,15 @@
 package com.evilmem.albert.evilmemory.Activities;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.location.Address;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -17,18 +21,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evilmem.albert.evilmemory.Data.LoginHelper;
+import com.evilmem.albert.evilmemory.Interface.OnFragmentInteractionListener;
 import com.evilmem.albert.evilmemory.R;
 import com.evilmem.albert.evilmemory.Service.BoundService;
 import com.evilmem.albert.evilmemory.gps.GPSActivity;
 
 import java.io.IOException;
+import java.util.List;
 
-public class EditProfile extends AppCompatActivity implements View.OnClickListener{
+import static com.evilmem.albert.evilmemory.R.id.textView;
 
-    EditText name,address,password;
+public class EditProfile extends Activity implements View.OnClickListener, OnFragmentInteractionListener {
+
+    EditText name, address, password;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -37,7 +46,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
     Button modify;
 
-    FloatingActionButton fab,fabaddress;
+    FloatingActionButton fab, fabaddress;
 
     Uri selectedImage;
 
@@ -48,7 +57,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
     boolean bound = false;
     Intent intent;
 
-    private ServiceConnection connection = new ServiceConnection(){
+    private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             BoundService.MyBinder binder = (BoundService.MyBinder) iBinder;
@@ -57,7 +66,7 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0){
+        public void onServiceDisconnected(ComponentName arg0) {
             bound = false;
         }
     };
@@ -77,10 +86,10 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         profile = (ImageView) findViewById(R.id.profile_picture);
 
-        sharedPreferences= getSharedPreferences("myApp", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("myApp", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        modify= (Button) findViewById(R.id.modify);
+        modify = (Button) findViewById(R.id.modify);
         modify.setOnClickListener(this);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -91,11 +100,24 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
         loginHelper = new LoginHelper(getApplicationContext());
 
+        Context context= getApplicationContext();
+
+        bService.registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        double latitude = intent.getDoubleExtra(bService.EXTRA_LATITUDE, 0);
+                        double longitude = intent.getDoubleExtra(bService.EXTRA_LONGITUDE, 0);
+                        address.setText("Lat: " + latitude + ", Lng: " + longitude);
+                    }
+                }, new IntentFilter(bService.ACTION_LOCATION_BROADCAST)
+        );
+
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.modify:
                 saveChanges();
                 break;
@@ -109,38 +131,42 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
 
                 //Usamos el Intent anterior para filtrar únicamente los que queremos que usen
                 Intent chooserIntent = Intent.createChooser(changeImage, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                 //startActivityForResult(chooserIntent, 1);
                 break;
             case R.id.fabaddress:
-                //bService.getGPS();
-                startActivity(new Intent (EditProfile.this, GPSActivity.class));
+                Context context= getApplicationContext();
+                bService.getGPS(context);
+                //startActivity(new Intent(EditProfile.this, GPSActivity.class));
                 break;
         }
     }
 
 
-    public void saveChanges(){
+    public void saveChanges() {
         /*ContentValues valuesToStore = new ContentValues();
         valuesToStore.put("completename", String.valueOf(name.getText()));
         valuesToStore.put("address", String.valueOf(address.getText()));
         valuesToStore.put("password", String.valueOf(password.getText()));*/
 
-        String cname= String.valueOf(name.getText());
-        String pass= String.valueOf(password.getText());
-        String add= String.valueOf(address.getText());
+        String cname = String.valueOf(name.getText());
+        String pass = String.valueOf(password.getText());
+        String add = String.valueOf(address.getText());
 
        /* editor.putBoolean("UserLoggedIn", true);
         editor.putString("username",name.getText().toString());
         editor.apply();*/
 
-        if(cname!=""&& cname.length()>5){
-        loginHelper.modifyName(cname);}
-        if(pass!=""&& pass.length()>5){
-        loginHelper.modifyPassword(pass);}
-        if(add!=""&& add.length()>5){
-        loginHelper.modifyAddress(add);}
+        if (cname != "" && cname.length() > 5) {
+            loginHelper.modifyName(cname);
+        }
+        if (pass != "" && pass.length() > 5) {
+            loginHelper.modifyPassword(pass);
+        }
+        if (add != "" && add.length() > 5) {
+            loginHelper.modifyAddress(add);
+        }
 
         Toast.makeText(getApplicationContext(), "User settings modified" + name.getText(), Toast.LENGTH_LONG).show();
         //name.setText("");
@@ -155,13 +181,13 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         //Como en este caso los 3 intents hacen lo mismo, si el estado es correcto recogemos el resultado
         //Aún así comprobamos los request code. Hay que tener total control de lo que hace nuestra app.
-        if(resultCode == RESULT_OK){
-            if(requestCode == 1){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
                 data.getData();
                 selectedImage = data.getData();
                 String s = selectedImage.toString();
-                Log.d("uri", "onActivityResult: "+s);
-                editor.putString("s",s);
+                Log.d("uri", "onActivityResult: " + s);
+                editor.putString("s", s);
                 editor.apply();
                 try {
                     profile.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage));
@@ -169,8 +195,19 @@ public class EditProfile extends AppCompatActivity implements View.OnClickListen
                     e.printStackTrace();
                 }
             }
-        }else{
-            Log.v("Result","Something happened");
+        } else {
+            Log.v("Result", "Something happened");
+        }
+    }
+    @Override
+    public void showMessage(List<Address> addressList) {
+
+
+        for (int i = 0; i < addressList.size(); ++i) {
+            TextView t = (TextView) findViewById(R.id.address);
+
+            if (i == 0) t.setText("");
+            t.setText(t.getText() + "\n" + addressList.get(i).getAddressLine(0));
         }
     }
 }

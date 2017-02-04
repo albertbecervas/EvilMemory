@@ -18,11 +18,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.evilmem.albert.evilmemory.R.id.result;
 
-public class Weather extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity {
 
     ButterKnife butterKnife;
 
     TextView celcius;
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://api.openweathermap.org/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -51,8 +52,8 @@ public class Weather extends AppCompatActivity {
                 if(response.isSuccessful()){
                     FOAASResponse foaasResponse = response.body();
                     //result= "tjykb";
-                    result = "   "+foaasResponse.getLat()+ "    "  + foaasResponse.getLon();
-                    //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
+                    result = foaasResponse.getWeather();
+                    Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
 
                 }else{
                     Toast.makeText(getApplicationContext(),"OH NO", Toast.LENGTH_SHORT).show();

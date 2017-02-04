@@ -1,6 +1,11 @@
 package com.evilmem.albert.evilmemory.Interface;
 
+import com.evilmem.albert.evilmemory.Activities.WeatherActivity;
+import com.evilmem.albert.evilmemory.Data.Coord;
+import com.evilmem.albert.evilmemory.Data.Weather;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Created by Albert on 03/02/2017.
@@ -8,25 +13,19 @@ import com.google.gson.annotations.SerializedName;
 public class FOAASResponse {
     @SerializedName("message") String m;
     @SerializedName("subtitle") String s;
-    @SerializedName("lat") Double lat;
-    @SerializedName("lat") Double lon;
     @SerializedName("APPID") String appid;
+    Coord coord;
+    @SerializedName("weather") List<Weather> weathers;
+
 
     public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
+        return coord.getLat();
     }
 
     public Double getLon() {
-        return lon;
+        return coord.getLon();
     }
 
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
 
     public String getAppid() {
         return appid;
@@ -50,5 +49,9 @@ public class FOAASResponse {
 
     public void setS(String s) {
         this.s = s;
+    }
+
+    public String getWeather() {
+        return weathers.get(0).toString();
     }
 }

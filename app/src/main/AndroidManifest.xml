@@ -74,7 +74,7 @@
             android:name="io.fabric.ApiKey"
             android:value="b024038b5dc0c3ccf0dc96a3fc6abbaef2f7dca2" />
 
-        <activity android:name=".Activities.Weather"></activity>
+        <activity android:name=".Activities.WeatherActivity"></activity>
     </application>
 
 </manifest>

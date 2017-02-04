@@ -24,7 +24,7 @@ public interface FOAASService {
                                      @Query("shoutcloud") String x);
 
     @Headers({"Accept: application/json"})
-    @GET("/data/2.5/weather?lat={lat}&lon={lon}")
+    @GET("/data/2.5/weather")
     Call<FOAASResponse> getWeather(@Query("lat") double lat,@Query("lon") double lon,@Query("APPID") String appid);
 
 }

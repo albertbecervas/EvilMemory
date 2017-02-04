@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/side_nav_bar"
-    tools:context="com.evilmem.albert.evilmemory.Memory4">
+    tools:context="com.evilmem.albert.evilmemory.Memory4"
+    >
 
 
     <LinearLayout
@@ -22,6 +23,7 @@
             android:id="@+id/imageView0"
             android:layout_weight="1"
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="0"
             />
 
         <ImageView
@@ -29,21 +31,24 @@
             android:layout_height="match_parent"
             android:id="@+id/imageView1"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="1"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView2"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="2"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView3"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="3"/>
     </LinearLayout>
 
     <LinearLayout
@@ -58,6 +63,7 @@
             android:id="@+id/imageView8"
             android:layout_weight="1"
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="4"
             />
 
         <ImageView
@@ -65,21 +71,24 @@
             android:layout_height="match_parent"
             android:id="@+id/imageView9"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="5"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView10"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="6"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView11"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="7"/>
 
     </LinearLayout>
 
@@ -95,6 +104,7 @@
             android:id="@+id/imageView16"
             android:layout_weight="1"
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="8"
             />
 
         <ImageView
@@ -102,21 +112,24 @@
             android:layout_height="match_parent"
             android:id="@+id/imageView17"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="9"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView18"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="10"/>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView19"
             android:layout_weight="1"
-            android:src="@drawable/ic_fast_forward_black_24dp"/>
+            android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="11"/>
 
     </LinearLayout>
 
@@ -133,6 +146,7 @@
             android:layout_weight="1"
 
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="12"
             />
 
         <ImageView
@@ -140,6 +154,7 @@
             android:layout_height="match_parent"
 
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="13"
             android:id="@+id/imageView25"
             android:layout_weight="1" />
 
@@ -150,6 +165,7 @@
             android:id="@+id/imageView26"
             android:layout_weight="1"
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="14"
 />
 
         <ImageView
@@ -159,6 +175,7 @@
             android:id="@+id/imageView27"
             android:layout_weight="1"
             android:src="@drawable/ic_fast_forward_black_24dp"
+            android:tag="15"
 />
 
     </LinearLayout>
@@ -167,13 +184,15 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.15">
+        android:layout_weight="1.15"
+        android:id="@+id/ignoreClick">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
@@ -205,7 +224,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_reload"
                 android:layout_gravity="center"
-                android:id="@+id/refresh"
+                android:id="@+id/reload"
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>

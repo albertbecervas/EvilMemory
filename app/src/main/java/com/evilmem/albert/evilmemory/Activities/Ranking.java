@@ -13,7 +13,8 @@ import com.evilmem.albert.evilmemory.Fragments.Ranking8;
 import com.evilmem.albert.evilmemory.Interface.OnFragmentInteractionListener;
 import com.evilmem.albert.evilmemory.R;
 
-public class Ranking extends drawer implements OnFragmentInteractionListener {
+//implements OnFragmentInteractionListener
+public class Ranking extends drawer {
 
     BottomNavigationView bottomNavigationItemView;
 
